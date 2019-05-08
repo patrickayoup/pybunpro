@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "~/.virtualenvs/pybunpro-S_E0NiMS/Scripts/python",
+    "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
+    "python.testing.pyTestEnabled": true,
+    "editor.rulers": [80]
+}
