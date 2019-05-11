@@ -26,6 +26,12 @@ class TestBunproClient(object):
                     requested_information=study_queue_information_dict)
 
     @pytest.fixture
+    def mock_recent_items_response(self, user_information_dict,
+                                   grammar_point_dict):
+        return dict(user_information=user_information_dict,
+                    requested_information=[grammar_point_dict])
+
+    @pytest.fixture
     def mock_bad_user_info_response(self, study_queue_information_dict):
         return dict(user_information=dict(),
                     requested_information=study_queue_information_dict)
@@ -72,3 +78,54 @@ class TestBunproClient(object):
 
         with pytest.raises(SchemaError):
             client.study_queue()
+
+    def test_recent_items(self, requests_mock, api_key,
+                          mock_recent_items_response, user_information,
+                          grammar_point):
+        requests_mock.get(f'https://bunpro.jp/api/user/{api_key}/recent_items',
+                          json=mock_recent_items_response)
+        client = BunproClient(api_key)
+        r_user_info, r_requested_info = client.recent_items()
+
+        assert r_user_info == user_information
+        assert r_requested_info == [grammar_point]
+
+    def test_recent_items_valid_limit(self, requests_mock, api_key,
+                                      mock_recent_items_response,
+                                      user_information, grammar_point):
+        requests_mock.get(
+            f'https://bunpro.jp/api/user/{api_key}/recent_items/1',
+            json=mock_recent_items_response)
+        client = BunproClient(api_key)
+        r_user_info, r_requested_info = client.recent_items(limit=1)
+
+        assert r_user_info == user_information
+        assert r_requested_info == [grammar_point]
+
+    def test_recent_items_negative_limit(self, api_key):
+        client = BunproClient(api_key)
+        with pytest.raises(ValueError):
+            client.recent_items(limit=-10)
+
+    def test_recent_items_large_limit(self, api_key):
+        client = BunproClient(api_key)
+        with pytest.raises(ValueError):
+            client.recent_items(limit=100)
+
+    def test_recent_items_user_info_parse_error(self, requests_mock, api_key,
+                                                mock_bad_user_info_response):
+        requests_mock.get(f'https://bunpro.jp/api/user/{api_key}/recent_items',
+                          json=mock_bad_user_info_response)
+        client = BunproClient(api_key)
+
+        with pytest.raises(SchemaError):
+            client.recent_items()
+
+    def test_recent_items_requested_info_parse_error(
+            self, requests_mock, api_key, mock_bad_requested_info_response):
+        requests_mock.get(f'https://bunpro.jp/api/user/{api_key}/recent_items',
+                          json=mock_bad_requested_info_response)
+        client = BunproClient(api_key)
+
+        with pytest.raises(SchemaError):
+            client.recent_items()

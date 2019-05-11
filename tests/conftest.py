@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from pybunpro import UserInformation, StudyQueue
+from pybunpro import UserInformation, StudyQueue, GrammarPoint
 
 
 @pytest.fixture
@@ -77,6 +77,7 @@ def study_queue(reviews_available, next_review_date,
                       reviews_available_next_hour,
                       reviews_available_next_day)
 
+
 @pytest.fixture
 def study_queue_dict(reviews_available, next_review_date_ts,
                      reviews_available_next_hour, reviews_available_next_day):
@@ -84,3 +85,43 @@ def study_queue_dict(reviews_available, next_review_date_ts,
                 next_review_date=next_review_date_ts,
                 reviews_available_next_hour=reviews_available_next_hour,
                 reviews_available_next_day=reviews_available_next_day)
+
+
+@pytest.fixture
+def grammar_point_item():
+    return 'でも'
+
+
+@pytest.fixture
+def created_at_date():
+    return datetime(2019, 5, 11)
+
+
+@pytest.fixture
+def created_at_date_ts(created_at_date):
+    return datetime.timestamp(created_at_date)
+
+
+@pytest.fixture
+def updated_at_date():
+    return datetime(2019, 5, 11)
+
+
+@pytest.fixture
+def updated_at_date_ts(updated_at_date):
+    return datetime.timestamp(updated_at_date)
+
+
+@pytest.fixture
+def grammar_point(grammar_point_item,
+                  created_at_date, updated_at_date):
+    return GrammarPoint(grammar_point_item, created_at_date,
+                        updated_at_date)
+
+
+@pytest.fixture
+def grammar_point_dict(grammar_point_item, created_at_date_ts,
+                       updated_at_date_ts):
+    return dict(grammar_point=grammar_point_item,
+                created_at_date=created_at_date_ts,
+                updated_at_date=updated_at_date_ts)

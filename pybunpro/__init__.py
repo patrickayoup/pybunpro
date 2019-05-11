@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List
 
 import requests
 from marshmallow import Schema, fields, post_load
@@ -25,6 +26,16 @@ class StudyQueue(object):
     next_review_date: datetime
     reviews_available_next_hour: int
     reviews_available_next_day: int
+
+
+@dataclass
+class GrammarPoint(object):
+    """
+    A single grammar point in Bunpro
+    """
+    grammar_point: str
+    created_at_date: datetime
+    updated_at_date: datetime
 
 
 class SchemaError(Exception):
@@ -104,6 +115,24 @@ class StudyQueueSchema(Schema):
         return StudyQueue(**data)
 
 
+class GrammarPointSchema(Schema):
+    """
+    Schema representing a grammar point
+    """
+    grammar_point = fields.String(required=True)
+    created_at_date = Timestamp(required=True)
+    updated_at_date = Timestamp(required=True)
+
+    @post_load
+    def make_grammar_point(self, data: dict) -> GrammarPoint:
+        """
+        Converts the data dictionary to a GrammarPoint instance
+        :param data: The loaded information
+        :return: The GrammarPoint instance
+        """
+        return GrammarPoint(**data)
+
+
 class BunproClient(object):
 
     def __init__(self, api_key: str):
@@ -119,7 +148,7 @@ class BunproClient(object):
         self._base_url = f'https://bunpro.jp/api/user/{self._api_key}'
         self._user_information_schema = UserInformationSchema()
 
-    def study_queue(self):
+    def study_queue(self) -> (UserInformation, StudyQueue):
         """
         Gets the user's study queue
         :return: The user info and study queue
@@ -143,3 +172,37 @@ class BunproClient(object):
                               queue_error)
 
         return user_info, queue_info
+
+    def recent_items(self, limit: int = None) \
+            -> (UserInformation, List[GrammarPoint]):
+        """
+        Gets the recently added grammer
+        :param limit: The maximum number of items to return.
+        Must be 1 to 50 inclusive. If omitted, the api defaults to 10.
+        """
+        if limit and (limit < 1 or limit > 50):
+            raise ValueError('Limit must be 1 to 50 (inclusive)')
+
+        url = f'{self._base_url}/recent_items'
+
+        if limit:
+            url += f'/{limit}'
+
+        resp = requests.get(url)
+        resp_json = resp.json()
+
+        schema = GrammarPointSchema(many=True)
+
+        user_info, user_error = self._user_information_schema.load(
+            resp_json['user_information'])
+        recent_info, recent_error = schema.load(
+            resp_json['requested_information'])
+
+        if user_error:
+            raise SchemaError('An error occurred parsing the user information',
+                              user_error)
+        elif recent_error:
+            raise SchemaError('An error occured parsing the recent '
+                              'items information', recent_error)
+
+        return user_info, recent_info
