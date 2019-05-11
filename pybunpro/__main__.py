@@ -7,7 +7,7 @@ import click
 from pybunpro import BunproClient, BunproAPIError
 
 logger = logging.getLogger(__name__)
-handler = logging.StreamHandler()
+handler = logging.StreamHandler(sys.stdout)
 handler.setFormatter(
     logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logger.addHandler(handler)
@@ -28,6 +28,7 @@ def cli(ctx, **kwargs):
 
     if debug:
         logger.setLevel(logging.DEBUG)
+        logger.debug('Debug Mode Enabled')
 
     client = BunproClient(api_key)
     logger.debug('Created bunpro client with key %s', api_key)

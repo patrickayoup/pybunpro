@@ -6,32 +6,6 @@ from pybunpro import BunproClient, SchemaError, BunproAPIError
 class TestBunproClient(object):
 
     @pytest.fixture
-    def api_key(self):
-        return 'dqcfu2qchoic3ucdooeravhvyhn1rdur'
-
-    @pytest.fixture
-    def study_queue_information_dict(self, reviews_available,
-                                     next_review_date_ts,
-                                     reviews_available_next_hour,
-                                     reviews_available_next_day):
-        return dict(reviews_available=reviews_available,
-                    next_review_date=next_review_date_ts,
-                    reviews_available_next_hour=reviews_available_next_hour,
-                    reviews_available_next_day=reviews_available_next_day)
-
-    @pytest.fixture
-    def mock_study_queue_response(self, user_information_dict,
-                                  study_queue_information_dict):
-        return dict(user_information=user_information_dict,
-                    requested_information=study_queue_information_dict)
-
-    @pytest.fixture
-    def mock_recent_items_response(self, user_information_dict,
-                                   grammar_point_dict):
-        return dict(user_information=user_information_dict,
-                    requested_information=[grammar_point_dict])
-
-    @pytest.fixture
     def mock_bad_user_info_response(self, study_queue_information_dict):
         return dict(user_information=dict(),
                     requested_information=study_queue_information_dict)
@@ -40,10 +14,6 @@ class TestBunproClient(object):
     def mock_bad_requested_info_response(self, user_information_dict):
         return dict(user_information=user_information_dict,
                     requested_information=dict())
-
-    @pytest.fixture
-    def error_response(self):
-        return dict(errors=[dict(message='User does not exist.')])
 
     def test_constructor(self, api_key):
         client = BunproClient(api_key)

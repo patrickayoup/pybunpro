@@ -125,3 +125,38 @@ def grammar_point_dict(grammar_point_item, created_at_date_ts,
     return dict(grammar_point=grammar_point_item,
                 created_at_date=created_at_date_ts,
                 updated_at_date=updated_at_date_ts)
+
+
+@pytest.fixture
+def api_key():
+    return 'dqcfu2qchoic3ucdooeravhvyhn1rdur'
+
+
+@pytest.fixture
+def mock_study_queue_response(user_information_dict,
+                              study_queue_information_dict):
+    return dict(user_information=user_information_dict,
+                requested_information=study_queue_information_dict)
+
+
+@pytest.fixture
+def study_queue_information_dict(reviews_available,
+                                 next_review_date_ts,
+                                 reviews_available_next_hour,
+                                 reviews_available_next_day):
+    return dict(reviews_available=reviews_available,
+                next_review_date=next_review_date_ts,
+                reviews_available_next_hour=reviews_available_next_hour,
+                reviews_available_next_day=reviews_available_next_day)
+
+
+@pytest.fixture
+def mock_recent_items_response(user_information_dict,
+                               grammar_point_dict):
+    return dict(user_information=user_information_dict,
+                requested_information=[grammar_point_dict])
+
+
+@pytest.fixture
+def error_response():
+    return dict(errors=[dict(message='User does not exist.')])
