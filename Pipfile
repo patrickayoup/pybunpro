@@ -9,6 +9,7 @@ pytest = "*"
 requests-mock = "*"
 pytest-cov = "*"
 coveralls = "*"
+mypy = "*"
 
 [packages]
 marshmallow = "*"

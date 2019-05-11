@@ -8,5 +8,6 @@ install:
 script:
   - pytest
   - flake8
+  - mypy pybunpro
 after_success:
   - coveralls

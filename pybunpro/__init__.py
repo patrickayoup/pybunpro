@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Tuple
 import logging
 
 import requests
@@ -69,11 +69,11 @@ class BunproAPIError(Exception):
         self._error = error
 
     @property
-    def status_code(self):
+    def status_code(self) -> int:
         return self._error.response.status_code
 
     @property
-    def errors(self):
+    def errors(self) -> List[str]:
         return [e.get('message')
                 for e in self._error.response.json().get('errors', [])]
 
@@ -83,7 +83,7 @@ class Timestamp(fields.Field):
     A converter field which converts to and from int timestamp/datetime
     """
 
-    def _serialize(self, value: datetime, attr: str, obj) -> int:
+    def _serialize(self, value: datetime, attr: str, obj: object) -> float:
         """
         Converts a datetime value to a timestamp
         :param value: The value to serialize
@@ -175,7 +175,7 @@ class BunproClient(object):
         self._user_information_schema = UserInformationSchema()
         logger.debug('Initialized client with base url: %s', self._base_url)
 
-    def study_queue(self) -> (UserInformation, StudyQueue):
+    def study_queue(self) -> Tuple[UserInformation, StudyQueue]:
         """
         Gets the user's study queue
         :return: The user info and study queue
@@ -213,7 +213,7 @@ class BunproClient(object):
         return user_info, queue_info
 
     def recent_items(self, limit: int = None) \
-            -> (UserInformation, List[GrammarPoint]):
+            -> Tuple[UserInformation, List[GrammarPoint]]:
         """
         Gets the recently added grammer
         :param limit: The maximum number of items to return.
