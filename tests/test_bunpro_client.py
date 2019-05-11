@@ -47,7 +47,6 @@ class TestBunproClient(object):
 
     def test_constructor(self, api_key):
         client = BunproClient(api_key)
-        assert client._api_key == api_key
         assert client._base_url == f'https://bunpro.jp/api/user/{api_key}'
 
     def test_constructor_none_api_key_raises_exception(self):

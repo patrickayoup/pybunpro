@@ -1,10 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List
+import logging
 
 import requests
 from requests import HTTPError
 from marshmallow import Schema, fields, post_load
+
+# Because this is a library, we don't want to force logs on people if they
+# don't configure logging themselves. This is why we have a null handler.
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 @dataclass
@@ -165,9 +171,9 @@ class BunproClient(object):
             raise TypeError('A Bunpro API key is required. '
                             'Please see https://www.bunpro.jp/api '
                             'for more info.')
-        self._api_key = api_key
-        self._base_url = f'https://bunpro.jp/api/user/{self._api_key}'
+        self._base_url = f'https://bunpro.jp/api/user/{api_key}'
         self._user_information_schema = UserInformationSchema()
+        logger.debug('Initialized client with base url: %s', self._base_url)
 
     def study_queue(self) -> (UserInformation, StudyQueue):
         """
@@ -176,10 +182,12 @@ class BunproClient(object):
         """
         url = f'{self._base_url}/study_queue'
         resp = requests.get(url)
+        logger.debug('GET request to %s', url)
 
         try:
             resp.raise_for_status()
         except HTTPError as e:
+            logger.error('API Error: %s', e)
             raise BunproAPIError(e)
 
         resp_json = resp.json()
@@ -192,9 +200,13 @@ class BunproClient(object):
             resp_json['requested_information'])
 
         if user_error:
+            logger.error('Error parsing user info: %s',
+                         resp_json['user_information'])
             raise SchemaError('An error occurred parsing the user information',
                               user_error)
         elif queue_error:
+            logger.error('Error parsing queue info: %s',
+                         resp_json['requested_information'])
             raise SchemaError('An error occured parsing the queue information',
                               queue_error)
 
@@ -216,10 +228,12 @@ class BunproClient(object):
             url += f'/{limit}'
 
         resp = requests.get(url)
+        logger.debug('GET request to %s', url)
 
         try:
             resp.raise_for_status()
         except HTTPError as e:
+            logger.error('API Error: %s', e)
             raise BunproAPIError(e)
 
         resp_json = resp.json()
@@ -232,9 +246,13 @@ class BunproClient(object):
             resp_json['requested_information'])
 
         if user_error:
+            logger.error('Error parsing user info: %s',
+                         resp_json['user_information'])
             raise SchemaError('An error occurred parsing the user information',
                               user_error)
         elif recent_error:
+            logger.error('Error parsing recent items info: %s',
+                         resp_json['requested_information'])
             raise SchemaError('An error occured parsing the recent '
                               'items information', recent_error)
 
