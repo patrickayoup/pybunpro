@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List
 
 import requests
+from requests import HTTPError
 from marshmallow import Schema, fields, post_load
 
 
@@ -49,6 +50,26 @@ class SchemaError(Exception):
         """
         self.message = message
         self.error = error
+
+
+class BunproAPIError(Exception):
+    """
+    Raised when there is an error returned from the Bunpro API
+    """
+    def __init__(self, error: HTTPError):
+        """
+        :param error: The original HTTPError
+        """
+        self._error = error
+
+    @property
+    def status_code(self):
+        return self._error.response.status_code
+
+    @property
+    def errors(self):
+        return [e.get('message')
+                for e in self._error.response.json().get('errors', [])]
 
 
 class Timestamp(fields.Field):
@@ -155,6 +176,12 @@ class BunproClient(object):
         """
         url = f'{self._base_url}/study_queue'
         resp = requests.get(url)
+
+        try:
+            resp.raise_for_status()
+        except HTTPError as e:
+            raise BunproAPIError(e)
+
         resp_json = resp.json()
 
         schema = StudyQueueSchema()
@@ -189,6 +216,12 @@ class BunproClient(object):
             url += f'/{limit}'
 
         resp = requests.get(url)
+
+        try:
+            resp.raise_for_status()
+        except HTTPError as e:
+            raise BunproAPIError(e)
+
         resp_json = resp.json()
 
         schema = GrammarPointSchema(many=True)

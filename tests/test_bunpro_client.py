@@ -1,6 +1,6 @@
 import pytest
 
-from pybunpro import BunproClient, SchemaError
+from pybunpro import BunproClient, SchemaError, BunproAPIError
 
 
 class TestBunproClient(object):
@@ -41,6 +41,10 @@ class TestBunproClient(object):
         return dict(user_information=user_information_dict,
                     requested_information=dict())
 
+    @pytest.fixture
+    def error_response(self):
+        return dict(errors=[dict(message='User does not exist.')])
+
     def test_constructor(self, api_key):
         client = BunproClient(api_key)
         assert client._api_key == api_key
@@ -78,6 +82,18 @@ class TestBunproClient(object):
 
         with pytest.raises(SchemaError):
             client.study_queue()
+
+    def test_study_queue_http_error(self, requests_mock, api_key,
+                                    error_response):
+        requests_mock.get(f'https://bunpro.jp/api/user/{api_key}/study_queue',
+                          json=error_response, status_code=400)
+        client = BunproClient(api_key)
+
+        with pytest.raises(BunproAPIError) as e:
+            client.study_queue()
+
+        assert e.value.status_code == 400
+        assert e.value.errors == ['User does not exist.']
 
     def test_recent_items(self, requests_mock, api_key,
                           mock_recent_items_response, user_information,
@@ -129,3 +145,15 @@ class TestBunproClient(object):
 
         with pytest.raises(SchemaError):
             client.recent_items()
+
+    def test_recent_items_http_error(self, requests_mock, api_key,
+                                     error_response):
+        requests_mock.get(f'https://bunpro.jp/api/user/{api_key}/recent_items',
+                          json=error_response, status_code=400)
+        client = BunproClient(api_key)
+
+        with pytest.raises(BunproAPIError) as e:
+            client.recent_items()
+
+        assert e.value.status_code == 400
+        assert e.value.errors == ['User does not exist.']
