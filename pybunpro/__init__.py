@@ -70,10 +70,16 @@ class BunproAPIError(Exception):
 
     @property
     def status_code(self) -> int:
+        """
+        The status code of the error response
+        """
         return self._error.response.status_code
 
     @property
     def errors(self) -> List[str]:
+        """
+        The error messages returned form the Bunpro API
+        """
         return [e.get('message')
                 for e in self._error.response.json().get('errors', [])]
 
@@ -161,6 +167,9 @@ class GrammarPointSchema(Schema):
 
 
 class BunproClient(object):
+    """
+    Bunpro REST API Client
+    """
 
     def __init__(self, api_key: str):
         """
@@ -178,7 +187,10 @@ class BunproClient(object):
     def study_queue(self) -> Tuple[UserInformation, StudyQueue]:
         """
         Gets the user's study queue
+
         :return: The user info and study queue
+        :raises BunproAPIError: If there is an error response from the API
+        :raises SchemaError: If the response cannot be parsed
         """
         url = f'{self._base_url}/study_queue'
         resp = requests.get(url)
@@ -216,8 +228,11 @@ class BunproClient(object):
             -> Tuple[UserInformation, List[GrammarPoint]]:
         """
         Gets the recently added grammer
-        :param limit: The maximum number of items to return.
-        Must be 1 to 50 inclusive. If omitted, the api defaults to 10.
+
+        :param limit: The maximum number of items to return. 1 to 50 inclusive.
+        :return: The user information and recent grammar points
+        :raises BunproAPIError: If there is an error response from the API
+        :raises SchemaError: If the response cannot be parsed
         """
         if limit and (limit < 1 or limit > 50):
             raise ValueError('Limit must be 1 to 50 (inclusive)')
