@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>API Documentation &#8212; PyBunpro 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Command Line Interface" href="cli.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-documentation">
+<span id="pybunpro-api-docs"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pybunpro.UserInformation">
+<em class="property">class </em><code class="descclassname">pybunpro.</code><code class="descname">UserInformation</code><span class="sig-paren">(</span><em>username</em>, <em>grammar_point_count</em>, <em>ghost_review_count</em>, <em>creation_date</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.UserInformation" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Bunpro user’s account information</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pybunpro.GrammarPoint">
+<em class="property">class </em><code class="descclassname">pybunpro.</code><code class="descname">GrammarPoint</code><span class="sig-paren">(</span><em>grammar_point</em>, <em>created_at_date</em>, <em>updated_at_date</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.GrammarPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single grammar point in Bunpro</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pybunpro.StudyQueue">
+<em class="property">class </em><code class="descclassname">pybunpro.</code><code class="descname">StudyQueue</code><span class="sig-paren">(</span><em>reviews_available</em>, <em>next_review_date</em>, <em>reviews_available_next_hour</em>, <em>reviews_available_next_day</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.StudyQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Bunpro user’s study queue</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pybunpro.BunproClient">
+<em class="property">class </em><code class="descclassname">pybunpro.</code><code class="descname">BunproClient</code><span class="sig-paren">(</span><em>api_key</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bunpro REST API Client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>api_key</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The Bunpro API key to use</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the provided API key is None</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pybunpro.BunproClient.recent_items">
+<code class="descname">recent_items</code><span class="sig-paren">(</span><em>limit=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient.recent_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the recently added grammer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of items to return. 1 to 50 inclusive.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="#pybunpro.UserInformation" title="pybunpro.UserInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserInformation</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#pybunpro.GrammarPoint" title="pybunpro.GrammarPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrammarPoint</span></code></a>]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user information and recent grammar points</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#pybunpro.BunproAPIError" title="pybunpro.BunproAPIError"><strong>BunproAPIError</strong></a> – If there is an error response from the API</p></li>
+<li><p><a class="reference internal" href="#pybunpro.SchemaError" title="pybunpro.SchemaError"><strong>SchemaError</strong></a> – If the response cannot be parsed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybunpro.BunproClient.study_queue">
+<code class="descname">study_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient.study_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the user’s study queue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="#pybunpro.UserInformation" title="pybunpro.UserInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserInformation</span></code></a>, <a class="reference internal" href="#pybunpro.StudyQueue" title="pybunpro.StudyQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">StudyQueue</span></code></a>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The user info and study queue</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#pybunpro.BunproAPIError" title="pybunpro.BunproAPIError"><strong>BunproAPIError</strong></a> – If there is an error response from the API</p></li>
+<li><p><a class="reference internal" href="#pybunpro.SchemaError" title="pybunpro.SchemaError"><strong>SchemaError</strong></a> – If the response cannot be parsed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pybunpro.SchemaError">
+<em class="property">exception </em><code class="descclassname">pybunpro.</code><code class="descname">SchemaError</code><span class="sig-paren">(</span><em>message</em>, <em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.SchemaError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when there is an error with a schema</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The error message to use</p></li>
+<li><p><strong>error</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – A dictionary with errors</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pybunpro.BunproAPIError">
+<em class="property">exception </em><code class="descclassname">pybunpro.</code><code class="descname">BunproAPIError</code><span class="sig-paren">(</span><em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproAPIError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when there is an error returned from the Bunpro API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>error</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPError</span></code>) – The original HTTPError</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="pybunpro.BunproAPIError.errors">
+<code class="descname">errors</code><a class="headerlink" href="#pybunpro.BunproAPIError.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>The error messages returned form the Bunpro API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybunpro.BunproAPIError.status_code">
+<code class="descname">status_code</code><a class="headerlink" href="#pybunpro.BunproAPIError.status_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>The status code of the error response</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PyBunpro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cli.html" title="previous chapter">Command Line Interface</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Patrick Ayoup.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/pages/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
