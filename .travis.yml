@@ -9,5 +9,15 @@ script:
   - pytest
   - flake8
   - mypy pybunpro
+  - cd docs
+  - make html
 after_success:
   - coveralls
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    keep_history: true
+    local_dir: docs/build/html
+    on:
+      branch: master
