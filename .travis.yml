@@ -6,11 +6,15 @@ install:
   - pip install pipenv
   - pipenv install --dev
 script:
-  - pytest
-  - flake8
-  - mypy pybunpro
-  - cd docs
-  - make html
+    - flake8
+    - mypy pybunpro
+    - pytest
+    - python setup.py sdist bdist_wheel
+    - cd docs
+    - make html
+    - touch build/html/.nojekyll
+    - touch build/html/_static/.nojekyll
+    - touch build/html/_sources/.nojekyll
 after_success:
   - coveralls
 deploy:
@@ -20,4 +24,11 @@ deploy:
     keep_history: true
     local_dir: docs/build/html
     on:
-      branch: master
+      tags: true
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+      tags: true

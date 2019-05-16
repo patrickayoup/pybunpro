@@ -12,7 +12,6 @@ coveralls = "*"
 mypy = "*"
 sphinx-click = "*"
 sphinx-autodoc-typehints = "*"
-twine = "*"
 
 [packages]
 marshmallow = "*"
