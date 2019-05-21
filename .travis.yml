@@ -9,7 +9,6 @@ script:
     - flake8
     - mypy pybunpro
     - pytest
-    - python setup.py sdist bdist_wheel
     - cd docs
     - make html
     - touch build/html/.nojekyll
@@ -24,11 +23,5 @@ deploy:
     keep_history: true
     local_dir: docs/build/html
     on:
-      tags: true
-  - provider: releases
-    api_key: $GITHUB_TOKEN
-    file_glob: true
-    file: dist/*
-    skip_cleanup: true
-    on:
-      tags: true
+      branch: master
+
