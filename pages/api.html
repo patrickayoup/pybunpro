@@ -65,11 +65,14 @@
 </dl>
 <dl class="method">
 <dt id="pybunpro.BunproClient.recent_items">
-<code class="descname">recent_items</code><span class="sig-paren">(</span><em>limit=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient.recent_items" title="Permalink to this definition">¶</a></dt>
+<code class="descname">recent_items</code><span class="sig-paren">(</span><em>limit=None</em>, <em>api_key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient.recent_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the recently added grammer</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of items to return. 1 to 50 inclusive.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>limit</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of items to return. 1 to 50 inclusive.</p></li>
+<li><p><strong>api_key</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – The API key to use</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="#pybunpro.UserInformation" title="pybunpro.UserInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserInformation</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#pybunpro.GrammarPoint" title="pybunpro.GrammarPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrammarPoint</span></code></a>]]</p>
@@ -88,8 +91,10 @@
 
 <dl class="method">
 <dt id="pybunpro.BunproClient.study_queue">
-<code class="descname">study_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient.study_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the user’s study queue</p>
+<code class="descname">study_queue</code><span class="sig-paren">(</span><em>api_key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pybunpro.BunproClient.study_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the user’s study queue
+:type api_key: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]
+:param api_key: The API key to use</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="#pybunpro.UserInformation" title="pybunpro.UserInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserInformation</span></code></a>, <a class="reference internal" href="#pybunpro.StudyQueue" title="pybunpro.StudyQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">StudyQueue</span></code></a>]</p>
