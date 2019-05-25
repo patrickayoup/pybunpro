@@ -180,19 +180,35 @@ class BunproClient(object):
             raise TypeError('A Bunpro API key is required. '
                             'Please see https://www.bunpro.jp/api '
                             'for more info.')
-        self._base_url = f'https://bunpro.jp/api/user/{api_key}'
+        self._base_url = 'https://bunpro.jp/api/user'
+        self._user_base_url = f'{self._base_url}/{api_key}'
         self._user_information_schema = UserInformationSchema()
-        logger.debug('Initialized client with base url: %s', self._base_url)
+        logger.debug('Initialized client with base url: %s',
+                     self._user_base_url)
 
-    def study_queue(self) -> Tuple[UserInformation, StudyQueue]:
+    def _get_base_url(self, api_key: str = None) -> str:
+        """
+        Determines the base URL to use
+        :param api_key: The user's API key
+        :return: The base API to use
+        """
+        if api_key:
+            return f'{self._base_url}/{api_key}'
+        else:
+            return self._user_base_url
+
+    def study_queue(self, api_key: str = None) \
+            -> Tuple[UserInformation, StudyQueue]:
         """
         Gets the user's study queue
+        :param api_key: The API key to use
 
         :return: The user info and study queue
         :raises BunproAPIError: If there is an error response from the API
         :raises SchemaError: If the response cannot be parsed
         """
-        url = f'{self._base_url}/study_queue'
+        base_url = self._get_base_url(api_key)
+        url = f'{base_url}/study_queue'
         resp = requests.get(url)
         logger.debug('GET request to %s', url)
 
@@ -224,12 +240,13 @@ class BunproClient(object):
 
         return user_info, queue_info
 
-    def recent_items(self, limit: int = None) \
+    def recent_items(self, limit: int = None, api_key: str = None) \
             -> Tuple[UserInformation, List[GrammarPoint]]:
         """
         Gets the recently added grammer
 
         :param limit: The maximum number of items to return. 1 to 50 inclusive.
+        :param api_key: The API key to use
         :return: The user information and recent grammar points
         :raises BunproAPIError: If there is an error response from the API
         :raises SchemaError: If the response cannot be parsed
@@ -237,7 +254,8 @@ class BunproClient(object):
         if limit and (limit < 1 or limit > 50):
             raise ValueError('Limit must be 1 to 50 (inclusive)')
 
-        url = f'{self._base_url}/recent_items'
+        base_url = self._get_base_url(api_key)
+        url = f'{base_url}/recent_items'
 
         if limit:
             url += f'/{limit}'
