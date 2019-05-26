@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import logging
 
 import requests
@@ -171,17 +171,17 @@ class BunproClient(object):
     Bunpro REST API Client
     """
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str = None):
         """
         :param api_key: The Bunpro API key to use
-        :raises TypeError: If the provided API key is None
         """
-        if not api_key:
-            raise TypeError('A Bunpro API key is required. '
-                            'Please see https://www.bunpro.jp/api '
-                            'for more info.')
         self._base_url = 'https://bunpro.jp/api/user'
-        self._user_base_url = f'{self._base_url}/{api_key}'
+
+        self._user_base_url: Optional[str] = None
+
+        if api_key:
+            self._user_base_url = f'{self._base_url}/{api_key}'
+
         self._user_information_schema = UserInformationSchema()
         logger.debug('Initialized client with base url: %s',
                      self._user_base_url)
@@ -191,11 +191,17 @@ class BunproClient(object):
         Determines the base URL to use
         :param api_key: The user's API key
         :return: The base API to use
+        :raises ValueError: If there is no default API key and the user does
+        not provide one.
         """
         if api_key:
             return f'{self._base_url}/{api_key}'
-        else:
+        elif self._user_base_url:
             return self._user_base_url
+        else:
+            raise ValueError('A Bunpro API key is required. '
+                             'Please see https://www.bunpro.jp/api '
+                             'for more info.')
 
     def study_queue(self, api_key: str = None) \
             -> Tuple[UserInformation, StudyQueue]:
