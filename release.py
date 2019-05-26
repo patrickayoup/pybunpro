@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+import shutil
 
 from setuptools.sandbox import run_setup
 
@@ -11,7 +12,7 @@ from git import Repo
 project_root = os.path.dirname(os.path.abspath(__file__))
 version_path = os.path.join(project_root, '.VERSION')
 setup_path = os.path.join(project_root, 'setup.py')
-
+dist_path = os.path.join(project_root, 'dist')
 
 os.chdir(project_root)
 print(f'Changed working directory to project root: {project_root}')
@@ -28,8 +29,11 @@ if version in repo.tags:
 repo.create_tag(version)
 print(f'Tag {version} created')
 
-repo.remote.origin.push(version)
+repo.remotes.origin.push(version)
 print(f'Tag {version} pushed')
+
+shutil.rmtree(dist_path)
+print('Deleted dist dir')
 
 run_setup(setup_path, ['sdist', 'bdist_wheel'])
 print(f'Artifacts for {version} created')
