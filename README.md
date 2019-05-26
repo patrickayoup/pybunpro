@@ -10,8 +10,5 @@ REST client for bunpro.jp
 
 First, update .VERSION and merge the change.
 
-    $ git tag {new_version}
-    $ git push --tags
-    $ python setup.py sdist bdist_wheel
-    $ python -m twine upload dist/*
+    $ ./release.py
 
