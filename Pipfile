@@ -13,6 +13,7 @@ mypy = "*"
 sphinx-click = "*"
 sphinx-autodoc-typehints = "*"
 twine = "*"
+gitpython = "*"
 
 [packages]
 marshmallow = "*"
