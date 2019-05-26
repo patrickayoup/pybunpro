@@ -19,9 +19,9 @@ class TestBunproClient(object):
         client = BunproClient(api_key)
         assert client._user_base_url == f'https://bunpro.jp/api/user/{api_key}'
 
-    def test_constructor_none_api_key_raises_exception(self):
-        with pytest.raises(TypeError):
-            BunproClient(None)
+    def test_constructor_none_api_key(self):
+        client = BunproClient()
+        assert client._user_base_url is None
 
     def test_study_queue(self, requests_mock, api_key,
                          mock_study_queue_response, user_information,
@@ -131,6 +131,11 @@ class TestBunproClient(object):
         client = BunproClient(api_key)
         base_url = client._get_base_url()
         assert base_url == f'https://bunpro.jp/api/user/{api_key}'
+
+    def test_get_base_url_no_default_key_raises(self):
+        client = BunproClient()
+        with pytest.raises(ValueError):
+            client._get_base_url()
 
     def test_get_base_url_override_key(self, api_key):
         override_key = 'overridekey'
