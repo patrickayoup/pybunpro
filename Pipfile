@@ -19,6 +19,7 @@ gitpython = "*"
 marshmallow = "*"
 requests = "*"
 click = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.7"

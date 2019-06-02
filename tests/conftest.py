@@ -2,6 +2,8 @@ from datetime import datetime
 
 import pytest
 
+import pytz
+
 from pybunpro import UserInformation, StudyQueue, GrammarPoint
 
 
@@ -22,7 +24,7 @@ def ghost_review_count():
 
 @pytest.fixture
 def creation_date():
-    return datetime(2017, 12, 25, 21, 3, 51)
+    return datetime(2017, 12, 25, 21, 3, 51, tzinfo=pytz.utc)
 
 
 @pytest.fixture
@@ -57,7 +59,7 @@ def next_review_date_ts():
 
 @pytest.fixture
 def next_review_date(next_review_date_ts):
-    return datetime.fromtimestamp(next_review_date_ts)
+    return datetime.fromtimestamp(next_review_date_ts, tz=pytz.utc)
 
 
 @pytest.fixture
@@ -94,7 +96,7 @@ def grammar_point_item():
 
 @pytest.fixture
 def created_at_date():
-    return datetime(2019, 5, 11)
+    return datetime(2019, 5, 11, tzinfo=pytz.UTC)
 
 
 @pytest.fixture
@@ -104,7 +106,7 @@ def created_at_date_ts(created_at_date):
 
 @pytest.fixture
 def updated_at_date():
-    return datetime(2019, 5, 11)
+    return datetime(2019, 5, 11, tzinfo=pytz.UTC)
 
 
 @pytest.fixture
