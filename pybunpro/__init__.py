@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import List, Tuple, Optional
 import logging
 
+import pytz
+
 import requests
 from requests import HTTPError
 from marshmallow import Schema, fields, post_load
@@ -87,6 +89,7 @@ class BunproAPIError(Exception):
 class Timestamp(fields.Field):
     """
     A converter field which converts to and from int timestamp/datetime
+    All datetimes are in UTC timezone
     """
 
     def _serialize(self, value: datetime, attr: str, obj: object) -> float:
@@ -107,7 +110,7 @@ class Timestamp(fields.Field):
         :param data: The data dict
         :return: The value as a datetime
         """
-        return datetime.fromtimestamp(value)
+        return datetime.fromtimestamp(value, tz=pytz.utc)
 
 
 class UserInformationSchema(Schema):
